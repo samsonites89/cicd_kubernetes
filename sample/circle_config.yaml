@@ -1,0 +1,29 @@
+
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/golang:1.11
+      - image: circleci/postgres:9.6-alpine
+        environment: # environment variables for primary container
+          POSTGRES_USER: postgres
+    working_directory: /go/src/github.com/the-gigi/delinkcious
+    steps:
+      - checkout
+      - run:
+          name: Get all dependencies
+          command: |
+            go get -v ./...
+            go get -u github.com/onsi/ginkgo/ginkgo
+            go get -u github.com/onsi/gomega/...
+      - run:
+          name: Test everything
+          command: ginkgo -r -race -failFast -progress
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: build and push Docker images
+          shell: /bin/bash
+          command: |
+            chmod +x ./build.sh
+            ./build.sh

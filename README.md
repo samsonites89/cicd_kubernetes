@@ -124,14 +124,16 @@ jobs:
 
 ###### 1. pre-build 작업 지정
 
-1단계에서는 build 작업을 지정하고 이에 필룡한 `docker` 이미지 및 관련 환경을 지정한다. 그 다음
+1 단계에서는 build 작업을 지정하고 이에 필룡한 `docker` 이미지 및 관련 환경을 지정한다. 그 다음
 어떤 경로(*working_directory*)에서 해당 작업을 실행할지 지정한다.
 
 ###### 2. build 단계
 
-2단계인 build 단계에서는 `checkout`로 제일 최신 소스코드를 repo에서 가지고 온다. `checkout`
+2 단계인 build 단계에서는 `checkout`로 제일 최신 소스코드를 repo에서 가지고 온다. `checkout`
 을 원할하게 하기 위해서는 *github* 저장소와 `Circle CI`와 연동이 되어 있어야하고, 저장소가
 외부에 있을 시 , 액세스 토큰을 별도 제공해야한다.
 그 이후 `go get` *cmd* 를  통해서 종속되어 있는 pkg를 가져온다.
 
 ###### [WIP] 3. test 단계
+
+3 단계인 test 단계에서는 모듈 테스트 관련 코드를 수행한다.
