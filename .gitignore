@@ -2,3 +2,7 @@
 
 # IDE related info.
 .idea
+
+#node sample packages
+node_sample/node_modules
+node_sample/build/Release

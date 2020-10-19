@@ -1,0 +1,21 @@
+{
+  "name": "node_sample",
+  "version": "1.0.0",
+  "description": "sample node app in order to test CI/CD",
+  "main": "nodeserver.js",
+  "scripts": {
+    "start": "node nodeserver.js",
+    "test": "mocha"
+  },
+  "keywords": [],
+  "author": "samsam.son",
+  "license": "ISC",
+  "dependencies": {
+    "ethereumjs-util": "^7.0.7",
+    "ethereumjs-wallet": "^0.6.4",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "mocha": "^8.2.0"
+  }
+}
