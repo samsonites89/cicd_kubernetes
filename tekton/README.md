@@ -2,11 +2,13 @@
 
 ## Contents
 
-### Tekton Introduction
+### Tekton Introductions
 
+**Tekton** 은 Kubernetes-native CI/CD 엔진이다. Kubernetes custom 리소스(`CustomerResourceDefinitions`/`CRDs`) 로 구성되어 있으며,
 
+Tekton에서는 `Task`,`Pipeline`,`TaskRun`,`PipelineRun` 등의 CRD를 사용한다.
 
-
+![Tekton Flow](../misc/img/Tekton_flow.png)
 
 ### Tekton Installation
 
@@ -65,3 +67,6 @@ service/tekton-pipelines-controller created
 deployment.apps/tekton-pipelines-webhook created
 service/tekton-pipelines-webhook created
 ```
+
+###### References
+[Introduction to Tekton architecture and design](https://developer.ibm.com/devpractices/devops/articles/introduction-to-tekton-architecture-and-design/)
