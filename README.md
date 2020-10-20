@@ -113,7 +113,7 @@ jobs:
         name: Test everything
         command: ginkgo -r -race -failFast -progress
     - setup_remote_docker:
-        docker_layer_caching: true
+        docker_layer_caching: true #layer를 cache해서 빌드 속도 향상.
     - run:
         name: build and push Docker images
         shell: /bin/bash
@@ -132,8 +132,70 @@ jobs:
 2 단계인 build 단계에서는 `checkout`로 제일 최신 소스코드를 repo에서 가지고 온다. `checkout`
 을 원할하게 하기 위해서는 *github* 저장소와 `Circle CI`와 연동이 되어 있어야하고, 저장소가
 외부에 있을 시 , 액세스 토큰을 별도 제공해야한다.
-그 이후 `go get` *cmd* 를  통해서 종속되어 있는 pkg를 가져온다.
+그 이후 `go get` *cmd* 를  통해서 종속되어 있는 *go pkg* 를 가져온다.
 
-###### [WIP] 3. test 단계
+###### 3. test 단계
 
 3 단계인 test 단계에서는 모듈 테스트 관련 코드를 수행한다.
+해당 모듈이 go 기반으로 작성되어 있어, [*gingko*](https://github.com/onsi/ginkgo) 라는
+테스트 프레임워크로 테스트를 수행한다.
+
+###### 4. docker build 단계
+
+4 단계에서는 docker image를 빌드하여 dockerhub 에 배포하는 과정이다.
+밑에는 해당 문서에서 사용하는 *build.sh* 스크립트 내용이다.
+
+```bash
+#!/bin/bash
+
+# 문제 있을시 바로 스크립트 바로 중단
+set -eo pipefail
+
+# Image 관련 prefix 및 tag 설정
+IMAGE_PREFIX='g1g1'
+STABLE_TAG='0.2'
+
+TAG="${STABLE_TAG}.${CIRCLE_BUILD_NUM}"
+ROOT_DIR="$(pwd)"
+SVC_DIR="${ROOT_DIR}/svc"
+cd $SVC_DIR
+docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
+for svc in *; do
+
+    cd "${SVC_DIR}/$svc"
+    # svc 경로로 이동하여 Dockerfile이 존재하는지 확인
+    if [[ ! -f Dockerfile ]]; then
+        continue
+    fi
+    UNTAGGED_IMAGE=$(echo "${IMAGE_PREFIX}/delinkcious-${svc}" | sed -e 's/_/-/g' -e 's/-service//g')
+    STABLE_IMAGE="${UNTAGGED_IMAGE}:${STABLE_TAG}"
+    IMAGE="${UNTAGGED_IMAGE}:${TAG}"
+    echo "image: $IMAGE"
+    echo "stable image: ${STABLE_IMAGE}"
+
+    # DOCKER BUILD AND PUSH
+    docker build -t "$IMAGE" .
+    docker tag "${IMAGE}" "${STABLE_IMAGE}"
+    docker push "${IMAGE}"
+    docker push "${STABLE_IMAGE}"
+done
+cd $ROOT_DIR
+```
+
+```docker
+FROM golang:1.11 AS builder
+ADD ./main.go main.go
+ADD ./service service
+# Fetch dependencies
+RUN go get -d -v
+
+# Build image as a truly static Go binary
+RUN CGO_ENABLED=0 GOOS=linux go build -o /link_service -a -tags netgo -ldflags '-s -w' .
+
+FROM scratch
+MAINTAINER Gigi Sayfan <the.gigi@gmail.com>
+COPY --from=builder /link_service /app/link_service
+EXPOSE 7070
+ENTRYPOINT ["/app/link_service"]
+
+```
