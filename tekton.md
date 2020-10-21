@@ -5,9 +5,6 @@
 ### Tekton Introduction
 
 
-
-
-
 ### Tekton Installation
 
 Installing Tekton Pipelines on Kubernetes
