@@ -1,17 +1,32 @@
 # Tekton Related Notes
 
-## Contents
-
-### Tekton Introductions
+## Tekton Introductions
 
 **Tekton** 은 Kubernetes-native CI/CD 엔진이다. Kubernetes custom 리소스(`CustomerResourceDefinitions`/`CRDs`) 로 구성되어 있으며,
 
-Tekton에서는 `Task`,`Pipeline`,`TaskRun`,`PipelineRun` 등의 CRD를 사용한다.
+Tekton에서는 `Step`,`Task`,`Pipeline`,`TaskRun`,`PipelineRun` 등의 CRD를 사용한다.
+여기서의 `Step` 은 하나의 *execution* (git checkout, test 등)을 뜻하며
+
+
+`Step` 은 **컨테이너**와 매핑이되며,  `Task`는 **Pod**이랑 매핑이 된다.
+`Pipeline` 은 `Task` 의 Ordering이라고 보면 되며 *jenkins build* 와 유사하다고 볼 수 있다.
+
+각 `Step`에서 필요한 정보 (예: git, docker registry)는 `PipelineResource`로 생성된다.
+
+장점:
+ - 모든 리소스가 cluster에 배포되어 있어 배포 리소스를 효율적으로 활용할 수 있다
+
+Pipelines are entities that group a series of Tasks that accomplish a specific build or delivery goal. 
+Pipelines can be triggered by an event or invoked from a PipelineRun entity. 
+Tasks can be simply sequentially ordered or organized into a Directed Acyclic Graph (DAG).
+
 
 ![Tekton Flow](../misc/img/Tekton_flow.png)
 
-### Tekton Installation
+## Tekton Installation
 
+
+### Install Tekton 
 Installing Tekton Pipelines on Kubernetes
 To install Tekton Pipelines on a Kubernetes cluster:
 
@@ -67,6 +82,19 @@ service/tekton-pipelines-controller created
 deployment.apps/tekton-pipelines-webhook created
 service/tekton-pipelines-webhook created
 ```
+### Install Tekton CLI
+[https://github.com/tektoncd/cli](https://github.com/tekton cd/cli)
+```bash
+curl -LO https://github.com/tektoncd/cli/releases/download/v0.11.0/tkn_0.11.0_Linux_x86_64.tar.gz
+tar xvzf tkn_0.11.0_Linux_x86_64.tar.gz -C /usr/local/bin/ tkn
+
+# Completion 추가
+source <(tkn completion bash)
+
+```
+### Install Tekton UI
+
+Refer to [Tekton Dashboard](tekton-dashboard-release.yaml)
 
 ###### References
 [Introduction to Tekton architecture and design](https://developer.ibm.com/devpractices/devops/articles/introduction-to-tekton-architecture-and-design/)
