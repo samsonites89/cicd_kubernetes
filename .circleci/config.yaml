@@ -1,17 +1,51 @@
 version: 2.1
 jobs:
+  build-and-publish:
+    working_directory: ~/project/node_sample
+    docker:
+      - image: docker:17.05.0-ce-git
+        auth:
+          username: samsonites
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build application Docker image
+          command: |
+            cd node_sample
+            docker build -t samsonites/nodejs_ci .
+      - run:
+          name: Publish Docker Image to Docker Hub
+          command: |
+            docker login -u samsonites -p ${DOCKERHUB_PASSWORD}
+            docker push samsonites/nodejs_ci:latest
+  # adding test
   test:
+    parameters:
+      app-dir:
+        default: ~/project/node_sample
+        type: string
     executor:
       name: node/default
       tag: '13.14'
     steps:
       - checkout
-      - node/install-packages
+      - node/install-packages:
+          app-dir: <<parameters.app-dir>>
+          override-ci-command: npm install
       - run:
           command: npm run test
+          working_directory: <<parameters.app-dir>>
+
 orbs:
   node: circleci/node@3.0.0
 workflows:
-  node-tests:
+  build_and_push_image:
     jobs:
-      - test
+      - test #node test
+      - build-and-publish:
+          requires:
+            - test
+          context:
+            - test
