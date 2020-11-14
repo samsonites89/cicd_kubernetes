@@ -13,11 +13,6 @@ const defaultPort = 8000;
 //create a server object:
 let server = http.createServer(function (req, res) {
 
-    var os = require( 'os' );
-    var networkInterfaces = os.networkInterfaces( );
-    console.log( networkInterfaces );
-
-
     switch (req.url) {
         case "/":
             res.writeHead(200, {'Content-Type': 'text/html'});
@@ -83,7 +78,8 @@ let server = http.createServer(function (req, res) {
 
 var port = process.env['SERVER_PORT'];
 if (port == null) {
-  console.log("not port value set.. using default port...")
+    console.log("node port value set.. using default port...")
+    port = defaultPort;
 }
 
 
@@ -99,4 +95,9 @@ process.on('SIGTERM', function onSigterm () {
     console.info('Got SIGTERM. Graceful shutdown start', new Date().toISOString());
     // start graceful shutdown here
     shutdown();
+});
+
+process.on('SIGINT', () => {
+    console.info("Interrupted Signal received. Shutting Node server container =");
+    process.exit(0)
 });
