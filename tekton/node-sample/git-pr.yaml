@@ -8,4 +8,5 @@ spec:
     - name: url
       value: https://github.com/samsonites89/cicd_kubernetes.git
     - name: revision
-      value: master
+#      value: master
+      value: develop-tekton

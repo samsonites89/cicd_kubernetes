@@ -1,0 +1,13 @@
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  name: npmtest-taskrun
+spec:
+  serviceAccountName: sam-serviceaccount
+  taskRef:
+    name: run-npm-test
+  resources:
+    inputs:
+      - name: git-source
+        resourceRef:
+          name: nodeserver-git
