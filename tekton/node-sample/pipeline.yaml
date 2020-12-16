@@ -15,11 +15,12 @@ spec:
       resources:
         inputs:
           - name: git-source
-            resourceRef:
-              name: nodeserver-git
+            resource: source-repo
     - name: build-nodeserver-image
       taskRef:
         name: build-docker-image
+      runAfter:
+        - run-npm-test
       params:
         - name: pathToDockerFile
           value: Dockerfile

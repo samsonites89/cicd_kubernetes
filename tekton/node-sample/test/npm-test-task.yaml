@@ -8,10 +8,6 @@ spec:
       - name: git-source
         type: git
   steps:
-    - name: echo
-      image: alpine
-      workingDir: /workspace/git-source/node_sample
-      command: ["ls"]
     - name: npm-install
       image: node:12
       workingDir: /workspace/git-source/node_sample
@@ -24,3 +20,7 @@ spec:
       command:
         - "npm"
       args: [ "run","test" ]
+    - name: echo
+      image: alpine
+      workingDir: /workspace/git-source/node_sample
+      command: [ "ls" ]
