@@ -9,6 +9,14 @@ spec:
     - name: web-image
       type: image
   tasks:
+    - name: run-npm-test
+      taskRef:
+        name: run-npm-test
+      resources:
+        inputs:
+          - name: git-source
+            resourceRef:
+              name: nodeserver-git
     - name: build-nodeserver-image
       taskRef:
         name: build-docker-image

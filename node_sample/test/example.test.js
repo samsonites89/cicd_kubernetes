@@ -12,11 +12,11 @@ describe('Simple Math Test', () => {
     });
 });
 
-describe('Simple Math Test FAIL', () => {
-    it('should return 2', () => {
-        assert.strictEqual(1, 2);
-    });
-});
+// describe('Simple Math Test FAIL', () => {
+//     it('should return 2', () => {
+//         assert.strictEqual(1, 2);
+//     });
+// });
 
 
 describe('Simple Math Test', () => {
