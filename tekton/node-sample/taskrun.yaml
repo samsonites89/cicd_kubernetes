@@ -1,0 +1,22 @@
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  name: build-image-taskrun
+spec:
+  serviceAccountName: sam-serviceaccount
+  taskRef:
+    name: build-docker-image
+  params:
+    - name: pathToDockerFile
+      value: Dockerfile
+    - name: pathToContext
+      value: $(resources.inputs.git-source.path)/node_sample #configure: may change according to your source
+  resources:
+    inputs:
+      - name: git-source
+        resourceRef:
+          name: nodeserver-git
+    outputs:
+      - name: builtImage
+        resourceRef:
+          name: nodeserver-image
