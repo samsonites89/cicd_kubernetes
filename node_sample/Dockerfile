@@ -9,7 +9,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 RUN npm config set strict-ssl false && \ 
-    npm config set proxy=http://70.10.15.10:8080 \
+    npm config set proxy=http://70.10.15.10:8080 &&\
     npm config set https-proxy=http://70.10.15.10:8080
 RUN npm install
 # If you are building your code for production
