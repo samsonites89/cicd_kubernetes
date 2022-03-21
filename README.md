@@ -1,4 +1,4 @@
-[!license](https://img.shields.io/github/license/samsonites89/cicd_kubernetes?style=flat-square)
+<img alt="GitHub" src="https://img.shields.io/github/license/samsonites89/cicd_kubernetes?style=flat-square">
 
 # cicd_kubernetes
 쿠버 클러스터 상 CI/CD 배포 practice.
